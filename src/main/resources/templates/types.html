@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head th:replace="_fragments :: head(~{::title})">
+		<title>分类</title>
+	</head>
+	<body>
+		<!--导航栏-->
+		<nav th:replace="_fragments :: menu(2)"></nav>
+
+		<!--中间内容-->
+		<div class="m-container m-padded-tb-big animated fadeIn m-opacity" >
+			<input type="hidden" name="page"/>
+			<div class="ui container">
+				<div class="ui top attached segment">
+					<!--middle aligned是文字垂直居中，two column是把div分成两列-->
+					<div class="ui middle aligned two column grid">
+						<div class="left aligned column">
+							<h3 class="ui green header">分类</h3>
+						</div>
+						<div class="right aligned column">
+							共<h2 class="ui orange header m-inline-block" th:text="${#arrays.length(types)}">13</h2>个
+						</div>
+					</div>
+				</div>
+
+				<div class="ui attached segment m-padded-tb-large">
+					<div class="ui labeled button m-margin-tb-tiny" th:each="type:${types}">
+						<a href="#" th:href="@{/types/{id}(id=${type.id})}" class="ui basic button" th:classappend="${type.id==activeTypeId}?'green'" th:text="${type.name}">思考與感悟</a>
+						<div class="ui basic left pointing label" th:classappend="${type.id==activeTypeId}?'green'" th:text="${type.account}">24</div>
+						<input type="hidden" name="typeid" th:value="${activeTypeId}" />
+					</div>
+				</div>
+				<div id="table-container" th:fragment="blogList">
+					<div class="ui teal top attached segment" >
+						<div class="ui padded vertical segment m-padded-tb-large" th:each="blog :${blogs.records}">
+							<div class="ui stackable grid ">
+								<div class="four wide column">
+									<a href="#" target="_blank"> 
+										<img src="https://note.youdao.com/yws/api/personal/file/5B85BA35158240DAA829F50D8666CE1C?method=download&shareKey=1371f2c43f1ada93daa0bddd100143d8" alt="" class="ui rounded image" style="width: 800px height:600px;">
+									</a>
+								</div>								
+								<div class="twelve wide column">
+									<h3 class="ui header">
+										<span class="ui basic label m-text-small" th:text="${blog.flag}" th:classappend="${blog.flag=='原创'} ?  'orange':'green' "></span>
+										<a th:href="@{/blog/{id}(id=${blog.id})}" class="m-black" th:text="${blog.title}"></a>
+									</h3>
+									<p class="m-text" th:text="${blog.description}"></p>
+									<div class="ui grid">
+										<div class="eleven wide column">
+											<div class="ui mini horizontal link list">
+												<div class="item">
+													<img src="/images/2.jpg" alt="" class="ui avatar image" />
+													<div class="content">
+														<a href="#" class="header" th:text="${blog.user.nickname}">周树人</a>
+													</div>
+												</div>
+												<div class="item">
+													<i class="calendar icon"></i>
+													<span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}">2020-01-01</span> 
+												</div>
+												<div class="item">
+													<i class="eye icon" ></i>
+													<span th:text="${blog.viewsAccount}">2020-01-01</span> 
+												</div>
+											</div>
+										</div>
+										<div class="right aligned five wide column">
+											<a href="#" target="_blank"
+												class="ui teal basic m-padded-all-mini m-text-thin label" th:text="${blog.type.name}">学习笔记</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 中间内容底部的翻页效果开始 --->
+					<div class="ui bottom attached segment">
+						<div class="ui middle aligned two column grid">
+							<div class="column">
+								<a onclick="page(this)" th:attr="data-page=${blogs.current}-1" class="ui mini teal basic button" th:unless="${blogs.current}==1">上一页</a>
+							</div>
+							<div class="right aligned column">
+								<a onclick="page(this)" th:attr="data-page=${blogs.current}+1" class="ui mini teal basic button" th:unless="${blogs.current}==${blogs.pages}">下一页</a>
+							</div>
+						</div>
+					</div>
+					<!-- 中间内容底部的翻页效果结束 --->
+				</div>
+			</div>
+			<br /><br />
+			<div th:switch="${blogs.total}"> 
+				 <th th:case=0>
+				 	<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+				 </th>
+			</div>
+		</div>
+
+		<!--底部内容-->
+		<footer th:replace="_fragments :: myfooter"></footer>
+	
+		<!--导入js-->
+		<script th:replace="_fragments :: myscript"></script>
+
+		<script>
+		
+			function page(obj){
+				$("[name='page']").val($(obj).data("page"));
+				loaddata();
+			}
+			function loaddata() {
+		        $("#table-container").load(/*[[@{/types/page}]]*/"/types/page",{
+			      id : $("[name='typeid']").val(),
+		          pageNum : $("[name='page']").val()
+		        });
+		      }
+		</script>
+	</body>
+</html>

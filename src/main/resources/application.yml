@@ -1,0 +1,11 @@
+spring:
+  thymeleaf:
+    cache: false  #是否使用缓存
+    mode: HTML    #严格的HTML语法模式
+    encoding: utf-8  #编码
+    
+  profiles:
+    active: dev
+
+comment.avatar: /images/d.jpg
+    

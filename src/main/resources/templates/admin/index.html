@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head th:replace="admin/_fragments :: head(~{::title})">
+	<title>我的博客</title>
+	</head>
+	
+	<body>
+		<!--导航栏-->
+		<nav th:replace="admin/_fragments :: menu(0)"></nav>
+
+		<!--中间内容-->
+		<div class="m-container">
+			<div class="container-fluid hero">
+			  <div class="ui container">
+				<h1>欢迎你<br>WELCOME YOU</h1>
+				<br/>
+				<p>
+					Success is the ability to go from one failure to another with no loss of enthusiasm
+					<br>
+					成功是，你即使跨过一个又一个失敗，但也沒有失去热情。
+					<br>	
+					<br>	
+					Peace of mind, calmness of reason, no movement for external things, and enough to stop, there will be no disaster.
+					<br>内心安静，理智冷静，不为外物所动，能够适可而止，就不会有灾难。									
+					<br>	
+					<br>	
+					Difficulties are storms on the sea, and confidence is the compass of ships. Only by being confident can we break the wind.
+					<br>困难是海上的风暴，信心则是船只的罗盘，只有信心坚定，才能迎风破浪。
+				</p>
+			  </div>
+			</div>
+		</div>
+
+		<!--导入js-->
+		<script th:replace="admin/_fragments :: myscript"></script>
+		
+	</body>
+</html>

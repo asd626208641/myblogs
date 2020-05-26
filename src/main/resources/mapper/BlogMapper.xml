@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxau.mapper.BlogMapper">
+	<resultMap id="getBlogMap" type="Blog">
+		<id property="id" column="id" />
+		<result property="recommend" column="recommend"></result>
+		<result property="appreciation" column="appreciation"></result>
+		<result property="flag" column="flag"></result>
+		<result property="content" column="content"></result>
+		<result property="published" column="published"></result>
+		<result property="title" column="title"></result>
+		<result property="commentabled" column="commentabled"></result>
+		<result property="shareStatement" column="share_statement"></result>
+		<result property="createTime" column="create_time"></result>
+		<result property="updateTime" column="update_time"></result>
+		<result property="viewsAccount" column="views_account"></result>
+		<result property="firstPicture" column="first_picture"></result>
+		<result property="description" column="description"></result>
+	
+		<association property="type" column="type_id" javaType="Type" select="getType" />
+		
+		<association property="user" column="user_id" javaType="User" select="getUser" />
+		
+		<collection property="tags" column="id" javaType="ArrayList" ofType="Tag" select="getTags" />
+		
+	</resultMap>
+	
+	<select id="getType" resultType="Type">
+		select *from type where id = #{type_id}
+	</select>
+	
+	<select id="getUser" resultType="User">
+		select id,avatar,nickname from user where id = #{user_id}
+	</select>
+	
+	<select id="getTags" resultType="Tag">
+		select 
+			t.id,t.name
+		from 
+			tag t,(select tags_id from blog_tags where blogs_id = #{user_id} ) m 
+		where 
+			m.tags_id = t.id
+	</select>
+	
+	<!-- 以下模块用于执行DML操作 -->
+		
+	<!-- 增加博客 -->
+	<insert id="addBlog" parameterType="Blog">
+		<selectKey keyProperty="id" resultType="long" order="AFTER">
+			SELECT
+			LAST_INSERT_ID()
+		</selectKey>	
+		insert into blog
+			(id,title,content,first_picture,flag,views_account,
+			appreciation,share_statement,commentabled,published,
+			recommend,create_time,update_time,type_id,user_id,description)
+		values
+			(#{id},#{title},#{content},#{firstPicture},#{flag},
+			#{viewsAccount},#{appreciation},#{shareStatement},
+			#{commentabled},#{published},#{recommend},#{createTime},
+			#{updateTime},#{type.id},#{user.id},#{description})
+	</insert>		
+
+	<!-- 维护博客和tag中间表 -->
+	<insert id="addBlogAndTags" parameterType="map">
+		insert into blog_tags(blogs_id,tags_id) values
+		<foreach collection="tagIds" item="tId" separator=",">
+			(#{blogId},#{tId})
+		</foreach>
+	</insert>
+
+	<!-- 更新博客 -->
+	<update id="updateBlog" parameterType="Blog">
+		update blog set 
+			title=#{title},
+			content=#{content},
+			first_picture=#{firstPicture},
+			flag=#{flag},
+			appreciation=#{appreciation},
+			share_statement=#{shareStatement},
+			commentabled=#{commentabled},
+			published=#{published},
+			recommend=#{recommend},
+			update_time=#{updateTime},
+			type_id=#{type.id}, 
+			description=#{description}
+		where 
+			id=#{id}
+	</update>	
+	
+	<!-- 刪除中间表 -->
+	<delete id="deleteBlogAndTags" parameterType="_long">
+		delete from
+			blog_tags 
+		where
+			blogs_id=#{id}
+	</delete>	
+
+	<!-- 通过中间表的tag_id查询blogs_id -->
+	<select id="getBlogIds" resultType="Long">
+		select 
+			blogs_id 
+		from 
+			blog_tags 
+		where 
+			tags_id=#{id}
+	</select>	
+
+	<!-- 更新浏览次数 -->
+	<update id="updateViewAccount">
+		update 
+			blog 
+		set 
+			views_account=views_account+1 
+		where 
+			id = #{id}
+	</update>
+	
+	<!-- 查询全部年份 -->
+	<select id="getAllYears" resultType="Long">
+		select 
+			year(create_time) as year 
+		from 
+			blog 
+		group by 
+			year(create_time) DESC
+	</select>	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

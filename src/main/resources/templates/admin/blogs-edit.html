@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+	<head th:replace="admin/_fragments :: head(~{::title})">
+	<title>博客修改</title>
+	</head>
+	
+	<body>
+		<!--导航栏-->
+		<nav th:replace="admin/_fragments :: menu(1)"></nav>
+
+		<!-- 二级导航 -->
+		<div th:replace="admin/_fragments :: secmenu(1)"></div>
+
+		<!--中间内容-->
+		<div class="m-container m-padded-tb-big">
+			<div class="ui container">
+				<form action="#" th:action="@{/admin/blogs/update}" th:object="${blog}" method="post" class="ui form" id="blog-form">
+					<div class="required field">
+						<div class="ui left labeled input">
+							<div class="ui selection compact teal basic dropdown label">
+								<input type="hidden" value="原创" name="blog.flag" th:value="*{flag}">
+								<i class="dropdown icon"></i>
+								<div class="text">原创</div>
+								<div class="menu">
+									<div class="item" data-value="原创">原创</div>
+									<div class="item" data-value="转载">转载</div>
+									<div class="item" data-value="收藏">收藏</div>
+								</div>
+							</div>
+							<input type="text" name="blog.title" placeholder="标题" th:value="*{title}">
+						</div>
+					</div>
+
+	                <div class="field" >
+	                    <div id="md-content" style="z-index: 1 !important">
+	                        <textarea placeholder="博客内容" name="blog.content" style="display: none;" th:text="*{content}">
+	                            [toc]
+	                            ## text
+	                            - java
+	                            - spring
+	                            ---
+	                        </textarea>
+	                    </div>
+	                </div>		
+
+					<div class="two fields">
+						<div class="field">
+							<div class="ui left labeled action input">
+								<label class="ui compact teal basic label">分类</label>
+								<div class="ui fluid selection  dropdown">
+									<input type="hidden" name="blog.type.id" th:value="*{type.id}">
+									<i class="dropdown icon"></i>
+									<div class="default text" >分类</div>
+									<div class="menu">
+										 <div th:each="type : ${types.records}"  class="item" data-value="1" th:data-value="${type.id}" th:text="${type.name}"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="field">
+							<div class="ui left labeled action input">
+								<label class="ui compact teal basic label">标签</label>
+								<div class="ui fluid selection multiple search dropdown">
+									<input type="hidden" name="blog.tagIds" th:value="*{tagIds}">
+									<i class="dropdown icon"></i>
+									<div class="default text" >标签</div>
+									<div class="menu">
+										 <div th:each="tag : ${tags.records}" class="item" data-value="1" th:data-value="${tag.id}" th:text="${tag.name}"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					
+					<div class="field">
+						<div class="ui left labeled input">
+							<label class="ui teal basic label">首图</label>
+							<input type="text" name="blog.firstPicture" placeholder="首图引用地址" th:value="*{firstPicture}">
+						</div>
+					</div>
+	
+				     <div class="required field">
+		          		<textarea name="blog.description" th:text="*{description}" placeholder="博客描述..." maxlength="200"></textarea>
+		       		 </div>
+		       		 
+					<div class="inline fields">
+						<div class="field">
+							<div class="ui checkbox">
+								<input type="checkbox" id="recommend" name="blog.recommend" th:checked="*{Recommend}" class="hidden">
+								<label for="recommend">推荐</label>
+							</div>
+						</div>
+						<div class="field">
+							<div class="ui checkbox">
+								<input type="checkbox" id="shareStatement" name="blog.shareStatement" th:checked="*{ShareStatement}" class="hidden">
+								<label for="shareStatement">分享信息</label>
+							</div>
+						</div>
+						<div class="field">
+							<div class="ui checkbox">
+								<input type="checkbox" id="appreciation" name="blog.appreciation" th:checked="*{Appreciation}" class="hidden">
+								<label for="appreciation">支持赞赏</label>
+							</div>
+						</div>
+						<div class="field">
+							<div class="ui checkbox">
+								<input type="checkbox" id="commentabled" name="blog.commentabled" th:checked="*{Commentabled}" class="hidden" >
+								<label for="commentabled">支持留言</label>
+							</div>
+						</div>
+					</div>
+	
+					<div class="ui error message"></div>
+	
+					<div class="ui right aligned container">
+						<button type="button" class="ui button" onclick="window.history.go(-1)">返回</button>
+						<button type="button" id="save-btn" class="ui secondary button">保存</button>
+						<button type="button" id="publish-btn" class="ui teal button">发布</button>
+					</div>
+					<input type="hidden" name="blog.published" />
+					<input type="hidden" name="blog.id" th:value="*{id}">
+				</form>
+			</div>
+		</div>
+
+		<!--导入js-->
+		<script th:replace="admin/_fragments :: myscript"></script>
+
+		<script>
+			/** 初始化editormd **/
+			var contentEditor;
+			$(function() {
+				contentEditor = editormd("md-content", {
+					width   : "100%",
+					height  : 640,
+					syncScrolling : "single",
+					path    : "/lib/editormd/lib/"
+				});
+			});
+			
+			$('#save-btn').click(function(){
+				$('[name="blog.published"]').val(false);
+				$('#blog-form').submit();
+			});
+			
+			$('#publish-btn').click(function(){
+				$('[name="blog.published"]').val(true);
+				$('#blog-form').submit();
+			});
+			
+			/*-- 表单验证 --*/
+			$('.ui.form').form({
+				fields : {
+					title : {
+						identifier: 'blog.title',
+						rules: [{
+							type : 'empty',
+							prompt : '标题：请输入博客标题'
+						}]
+					},
+					content : {
+						identifier: 'blog.content',
+						rules: [{
+							type : 'empty',
+							prompt : '标题：请输入博客内容'
+						}]
+					},
+					tpye : {
+						identifier: 'blog.type',
+						rules: [{
+							type : 'empty',
+							prompt : '标题：请输入博客分类'
+						}]
+					},
+					tags : {
+						identifier: 'blog.tags',
+						rules: [{
+							type : 'empty',
+							prompt : '标题：请输入博客标签'
+						}]
+					},
+					firstPicture : {
+						identifier: 'blog.firstPicture',
+						rules: [{
+							type : 'empty',
+							prompt : '标题：请输入首图'
+						}]
+					},
+					description  : {
+						identifier: 'blog.description',
+						rules: [{
+							type : 'empty',
+							prompt : '标题：请输入内容'
+						}]
+					}
+				}
+			});
+			
+		</script>
+	</body>
+</html>

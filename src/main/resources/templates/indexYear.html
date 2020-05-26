@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="_fragments :: head(~{::title})">
+<title>首页</title>
+</head>
+
+<body>
+	<!--导航栏-->
+	<nav th:replace="_fragments :: menu(4)"></nav>
+
+	<!--中间内容-->
+	<div class="m-container m-padded-tb-big animated fadeIn">
+		<div class="ui container">
+			<div class="ui stackable grid">
+				<!--左边博客列表-->
+				<div class="fifteen wide column  m-opacity ">
+					<div class="ui top attached segment">
+						<!--middle aligned是文字垂直居中，two column是把div分成两列-->
+						<div class="ui middle aligned two column grid">
+							<div class="left aligned column">
+								<h3 class="ui green header" th:text="${year}">2020</h3>
+							</div>
+							<div class="right aligned column">
+								共
+								<h2 class="ui orange header m-inline-block" th:text="${blogs.total}">13</h2>
+								篇
+							</div>
+						</div>
+					</div>
+
+					<!--context-->
+					<div class="ui attached segment">
+						<div class="ui padded vertical segment m-padded-tb-large" th:each="blog :${blogs.records}">
+							<div class="ui middle aligned stackable grid">
+								<div class="five wide column">
+									<a href="#" target="_blank"> 
+										<img src="https://note.youdao.com/yws/api/personal/file/5B85BA35158240DAA829F50D8666CE1C?method=download&shareKey=1371f2c43f1ada93daa0bddd100143d8" alt="" class="ui rounded image" style="width: 800px height:600px;">
+									</a>
+								</div>
+								<div class="eleven wide column">
+									<h3 class="ui header">
+										<span class="ui basic label m-text-small" th:text="${blog.flag}" th:classappend="${blog.flag=='原创'} ?  'orange':'green' "></span>
+										<a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="m-black" th:text="${blog.title}"></a>
+									</h3>
+									<p class="m-text" th:text="${blog.description}"></p>
+									<div class="ui grid">
+										<div class="eleven wide column">
+											<div class="ui mini horizontal link list">
+												<div class="item">
+													<img src="/images/2.jpg" th:src="${blog.user.avatar}" alt="" class="ui avatar image" />
+													<div class="content">
+														<a href="#" class="header" th:text="${blog.user.nickname}">周树人</a>
+													</div>
+												</div>
+												<div class="item">
+													<i class="calendar alternate icon"></i>
+													<span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}"></span> 
+												</div>
+												<div class="item">
+													<i class="eye icon" ></i>
+													<span th:text="${blog.viewsAccount}"></span> 
+												</div>
+												<div class="item">
+													<i class="comment alternate outline icon" ></i>
+													<span th:text="${blog.viewsAccount}"></span> 
+												</div>
+											</div>
+										</div>
+										<div class="right aligned five wide column">
+											<a href="#" target="_blank" class="ui teal basic m-padded-all-mini m-text-thin label" th:text="${blog.type.name}">学习笔记</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- 中间内容底部的翻页效果开始 --->
+					<div class="ui bottom attached segment">
+						<div class="ui middle aligned two column grid">
+							<div class="column">
+								<a href="#" th:href="@{/blogs/{year}(year=${year},pageNum=${blogs.current}-1)}"  class="ui mini teal basic button" th:unless="${blogs.current}==1">上一页</a>
+							</div>
+							<div class="right aligned column">
+								<a href="#" th:href="@{/blogs/{year}(year=${year},pageNum=${blogs.current}+1)}" class="ui mini teal basic button" th:unless="${blogs.current}==${blogs.pages}">下一页</a>
+							</div>
+						</div>
+					</div>
+					<!-- 中间内容底部的翻页效果结束 --->
+
+				</div>
+				<!--右边的tips-->
+
+			</div>
+		</div>
+		<br /> <br />
+	</div>
+
+	<!--底部内容-->
+	<footer th:replace="_fragments :: myfooter"></footer>
+
+	<!--导入js-->
+	<script th:replace="_fragments :: myscript"></script>
+
+
+</body>
+</html>

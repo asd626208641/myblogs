@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxau.mapper.TypeMapper">
+	<select id="getTypesTop" resultType="map">
+		select 
+			m.id,m.name,count(type_id)account 
+		from 
+			(select t.id,t.name,b.type_id from type t left join blog b on t.id=b.type_id) as m 
+		group by 
+			m.name 
+		order by 
+			account desc
+		limit 
+			0,#{sizeNum}
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

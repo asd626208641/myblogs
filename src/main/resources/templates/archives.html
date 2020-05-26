@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head th:replace="_fragments :: head(~{::title})">
+		<title>归档</title>
+	</head>
+	<body>
+		<!--导航栏-->
+		<nav th:replace="_fragments :: menu(4)"></nav>
+
+		<!--中间内容-->
+		<div class="m-container m-padded-tb-big animated fadeIn m-opacity">
+			<div class="ui container">
+				<div class="ui top attached segment">
+					<!--middle aligned是文字垂直居中，two column是把div分成两列-->
+					<div class="ui middle aligned two column grid">
+						<div class="left aligned column">
+							<h3 class="ui green header">归档</h3>
+						</div>
+						<div class="right aligned column">
+							共<h2 class="ui orange header m-inline-block" th:text="${totalCount}">13</h2>篇博客
+						</div>
+					</div>
+				</div>
+
+				<div class="ui teal segment" th:each="item : ${archivesMap}">
+					<div class="ui middle aligned grid">
+						<div class="fifteen wide column">
+							<div class="ui center aligned header" th:text="${item.key}">2019</div>
+						</div>
+						<div class="one right wide column">
+							<a href="#" th:href="@{/blogs/{year}(year=${item.key})}" class="ui basic teal right pointing label m-padded-mini" style="font-size:5px">更多</a>
+						</div>
+					</div>
+					<div class="ui fluid vertical menu">
+						<a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="item" th:each="blog: ${item.value}">
+							<span>
+								<i class="small teal circle icon"></i>
+								<span th:text="${blog.title}"></span>
+								<div class="ui teal basic left pointing label m-padded-mini" th:text="${#dates.format(blog.createTime,'MM月dd日')}">9月03日</div>
+							</span>
+							<div class="ui basic left pointing label m-padded-mini" th:text="${blog.flag}" th:classappend="${blog.flag=='原创'} ?  'orange':'green' ">原创</div>
+						</a>						
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<!--底部内容-->
+		<footer th:replace="_fragments :: myfooter"></footer>
+	
+		<!--导入js-->
+		<script th:replace="_fragments :: myscript"></script>
+	</body>
+</html>

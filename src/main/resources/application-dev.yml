@@ -1,0 +1,55 @@
+server:
+  port: 8080
+  
+logging:
+  level:
+    root: info        # 默认日志,这种配置是对所有用到的程序文件都开启debug级日志打印
+    com.jxau: info   # 指定包日志的级别
+  file: log/myblog-dev.log   # 日志的路径设置
+
+spring: 
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true 
+    
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/myblogs?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: Aa123123
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      #初始连接数
+      initial-size: 5
+      #最小空闲数
+      min-idle: 5
+      #最大活动数
+      max-active: 20
+      #等待超时时间
+      max-wait: 60000
+      #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      time-between-eviction-runs-millis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      min-evictable-idle-time-millis: 600000
+ 
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  typeAliasesPackage: com.jxau.entity
+  configuration:
+    #是否开启自动驼峰命名规则（camel case）映射，即从经典数据库列名 A_COLUMN（下划线命名） 到经典 Java 属性名 aColumn（驼峰命名） 的类似映射
+    map-underscore-to-camel-case: true
+    #打开延迟加载的开关 
+    lazy-loading-enabled: true
+    #将积极加载改为消极加载即按需要加载
+    aggressive-lazy-loading: false
+    #开启二级缓存
+    cache-enabled: true
+    # 是否将sql打印到控制面板(该配置会将sql语句和查询的结果都打印到控制台
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+
+ 
+ 
+      

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxau.mapper.TagMapper">
+	<select id="getTagsTop" resultType="map">
+		select 
+			m.id,m.name,count(m.tags_id)account 
+		from 	
+			(select *from tag tt left join blog_tags tb on tb.tags_id = tt.id) as m
+		group by 
+			m.name
+		order by
+			account desc
+		limit 
+			0,#{sizeNum}
+	</select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

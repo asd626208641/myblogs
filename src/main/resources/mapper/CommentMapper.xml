@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jxau.mapper.CommentMapper">
+
+	<resultMap id="getCommentMap" type="Comment">
+		<id property="id" column="id" />
+		<result property="adminComment" column="admin_comment"></result>
+		<result property="avatar" column="avatar"></result>
+		<result property="content" column="content"></result>
+		<result property="createTime" column="create_time"></result>
+		<result property="email" column="email"></result>
+		<result property="nickname" column="nickname"></result>
+		
+		<association property="blog" column="blog_id" javaType="Blog" select="getBlog" />
+		
+		<association property="parentComment" column="parent_comment_id" javaType="Comment" select="getComment" />
+		
+	</resultMap>
+	
+	<select id="getBlog" resultType="Blog">
+		select id from blog where id = #{blog_id}
+	</select>
+	
+	<select id="getComment" resultType="Comment">
+		select id from comment where id = #{parent_comment_id}
+	</select>
+	
+	<!-- 以下模块用于执行DML操作 -->
+		
+	<!-- 增加评论 -->
+	<insert id="addComment" parameterType="Comment">
+		insert 
+			into 
+		comment
+			(id,admin_comment,avatar,content,create_time,email,nickname,blog_id,parent_comment_id)
+		values
+			(#{id},#{adminComment},#{avatar},#{content},#{createTime},#{email},#{nickname},#{blog.id},#{parentComment.id})
+	</insert>	
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

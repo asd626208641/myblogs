@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head th:replace="admin/_fragments :: head(~{::title})">
+	<title>标签</title>
+	</head>
+	
+	<body>
+		<!--导航栏-->
+		<nav th:replace="admin/_fragments :: menu(3)"></nav>
+
+		<!-- 二级导航 -->
+		<div th:replace="admin/_fragments :: secmenu(2)"></div>
+
+		<!--中间内容-->
+		<div class="m-container m-padded-tb-big m-opacity">
+			<div class="ui container">
+			      <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+			        <i class="close icon"></i>
+			        <div class="header">提示：</div>
+			        <p th:text="${message}">恭喜，操作成功！</p>
+			      </div>
+				<table class="ui compact teal table">
+					<thead>
+						<tr>
+							<th>编号</th>
+							<th>名称</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="tag,aStat:${tags.records}">
+							<td th:text="${aStat.count}"></td>
+							<td th:text="${tag.name}"></td>
+							<td>
+								<a th:href="@{/admin/tag/editUI/{id}(id=${tag.id})}" href="#" class="ui mini teal basic button">编辑</a>
+								<a th:href="@{/admin/tag/delete/{id}(id=${tag.id})}" href="#" class="ui mini red basic button">删除</a>
+							</td>
+						</tr>
+					</tbody>
+					<!-- 中间内容分页开始 -->
+					<tfoot>
+						<tr>
+							<th colspan="6">
+								<div class="ui mini pagination menu">
+									<a class="item" th:href="@{/admin/tag(pageNum=1)}">首页</a>
+									<a class="item" th:href="@{/admin/tag(pageNum=${tags.current}-1)}" th:unless="${tags.current}==1">上一页</a>
+									<a class="item" th:href="@{/admin/tag(pageNum=${tags.current}+1)}" th:unless="${tags.current}==${tags.pages}">下一页</a>
+									<a class="item" th:href="@{/admin/tag(pageNum=${tags.pages})}">尾页</a>
+									<a class="item" th:text="第+${tags.current}+页"></a>
+									<a class="item" th:text="共+${tags.pages}+页"></a>
+									<a class="item" th:text="共+${tags.total}+条"></a>
+								</div>
+								<a th:href="@{/admin/tag/inputUI}" class="ui mini right floated teal basic button">新增</a>
+							</th>
+						</tr>
+					</tfoot>
+					<!-- 中间内容分页结束 -->
+				</table>
+			</div>
+		</div>
+		
+		<!--导入js-->
+		<script th:replace="admin/_fragments :: myscript"></script>
+		
+		  <script>
+		    //消息提示关闭初始化
+		    $('.message .close')
+		      .on('click', function () {
+		        $(this)
+		          .closest('.message')
+		          .transition('fade');
+		      });
+  		</script>
+	</body>
+</html>
